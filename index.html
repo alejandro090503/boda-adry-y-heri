@@ -1240,11 +1240,6 @@ gsap.registerPlugin(ScrollTrigger);
 
   function revealInvitation(){
     prepareInvitation();
-    audio.play().catch(function(){});
-    playing = true;
-    vinylDisc.classList.add('is-playing');
-    fab.classList.add('is-playing');
-    fab.setAttribute('aria-label','Pausar música');
     gsap.to(envFlash, {opacity:0, duration:1.2, ease:'power2.out',
       onComplete(){ envFlash.style.display='none'; }});
   }
