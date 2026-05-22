@@ -91,29 +91,26 @@ body{
 }
 
 /* ── ORNAMENTO ── */
-.orn{display:flex;justify-content:center;padding:6px 0;}
-.orn svg{width:170px;height:38px;}
-.orn svg polygon:first-of-type{
+.orn{display:flex;justify-content:center;padding:8px 0;}
+.orn svg{width:220px;height:28px;overflow:visible;}
+.orn-diamond{
   transform-box:fill-box;transform-origin:center;
-  animation:orn-spin 14s linear infinite, orn-glow 3.2s ease-in-out infinite;
+  animation:orn-pulse 3s ease-in-out infinite;
 }
-.orn svg polygon:nth-of-type(2),
-.orn svg polygon:nth-of-type(3){
-  transform-box:fill-box;transform-origin:center;
-  animation:orn-spin-r 20s linear infinite;
+.orn-dot{animation:orn-blink 2.6s ease-in-out infinite;}
+.orn-dot:nth-of-type(2){animation-delay:.4s;}
+.orn-line{stroke-dasharray:70;animation:orn-shimmer 4s linear infinite;}
+.orn-line:nth-of-type(2){animation-direction:reverse;animation-delay:-.5s;}
+@keyframes orn-pulse{
+  0%,100%{transform:scale(1);filter:drop-shadow(0 0 2px rgba(192,146,78,.3));}
+  50%    {transform:scale(1.18);filter:drop-shadow(0 0 10px rgba(236,203,156,.95)) drop-shadow(0 0 4px rgba(192,146,78,.7));}
 }
-.orn svg path:first-of-type{stroke-dasharray:6 5;animation:orn-flow 3.5s linear infinite;}
-.orn svg path:nth-of-type(2){stroke-dasharray:4 7;animation:orn-flow-r 4.5s linear infinite;}
-@keyframes orn-spin  {to{transform:rotate(360deg);}}
-@keyframes orn-spin-r{to{transform:rotate(-360deg);}}
-@keyframes orn-flow  {to{stroke-dashoffset:-22;}}
-@keyframes orn-flow-r{to{stroke-dashoffset:22;}}
-@keyframes orn-glow{
-  0%,100%{filter:drop-shadow(0 0 1px rgba(192,146,78,.35));}
-  50%    {filter:drop-shadow(0 0 9px rgba(236,203,156,.95)) drop-shadow(0 0 3px rgba(192,146,78,.6));}
+@keyframes orn-blink{
+  0%,100%{opacity:.28;}50%{opacity:.75;}
 }
+@keyframes orn-shimmer{to{stroke-dashoffset:-140;}}
 @media(prefers-reduced-motion:reduce){
-  .orn svg polygon,.orn svg path{animation:none;}
+  .orn-diamond,.orn-dot,.orn-line{animation:none;}
 }
 
 /* ── FECHA ── */
@@ -426,62 +423,129 @@ footer .fc a{color:inherit;text-decoration:none;}
 
 /* ── VINIL / MÚSICA ── */
 .vinyl-btn{
-  position:fixed;bottom:22px;right:22px;z-index:998;
-  width:72px;height:72px;border:none;background:transparent;
-  cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;
-  filter:drop-shadow(0 6px 20px rgba(0,0,0,.65));
+  position:fixed;bottom:20px;right:20px;z-index:998;
+  width:72px;height:72px;border-radius:50%;padding:0;
+  border:none;cursor:pointer;background:transparent;
+  opacity:0;transform:scale(.6);pointer-events:none;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1);
+  box-shadow:0 4px 18px rgba(0,0,0,.45),0 0 0 1px rgba(192,146,78,.12);
 }
-.vinyl-btn:focus-visible{outline:2px solid var(--gold);outline-offset:6px;border-radius:50%;}
-.vinyl-btn::before{
-  content:'';position:absolute;inset:-7px;border-radius:50%;
-  border:1.5px solid rgba(192,146,78,.55);
-  opacity:0;pointer-events:none;transition:opacity .35s;
+.vinyl-btn.is-ready{opacity:1;transform:scale(1);pointer-events:auto;}
+.vinyl-btn:hover{transform:scale(1.1);}
+.vinyl-spin{
+  width:100%;height:100%;border-radius:50%;position:relative;transition:none;
 }
-.vinyl-btn.is-playing::before{
-  opacity:1;animation:vinyl-ring 2.4s ease-out infinite;
-}
-@keyframes vinyl-ring{
-  0%  {box-shadow:0 0 0 0   rgba(192,146,78,.45);}
-  65% {box-shadow:0 0 0 14px rgba(192,146,78,0);}
-  100%{box-shadow:0 0 0 0   rgba(192,146,78,0);}
-}
-.vinyl{
-  width:72px;height:72px;border-radius:50%;
-  position:relative;overflow:hidden;
+.vinyl-btn.is-playing .vinyl-spin{animation:vinylSpin 1.8s linear infinite;}
+@keyframes vinylSpin{to{transform:rotate(360deg);}}
+.vinyl-disc{
+  width:100%;height:100%;border-radius:50%;overflow:hidden;position:relative;
   background:
-    radial-gradient(circle at 30% 28%, rgba(255,255,255,.10) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%,
-      #12100C 0%, #12100C 33%,
-      rgba(255,255,255,.07) 33.5%, #12100C 34%,
-      #12100C 37%, rgba(255,255,255,.04) 37.5%, #12100C 38%,
-      #12100C 41%, rgba(255,255,255,.06) 41.5%, #12100C 42%,
-      #12100C 45%, rgba(255,255,255,.04) 45.5%, #12100C 46%,
-      #12100C 49%, rgba(255,255,255,.05) 49.5%, #12100C 50%,
-      #12100C 53%, rgba(255,255,255,.04) 53.5%, #12100C 54%,
-      #12100C 57%, rgba(255,255,255,.06) 57.5%, #12100C 58%,
-      #12100C 61%, rgba(255,255,255,.04) 61.5%, #12100C 62%,
-      #12100C 100%
-    );
-  animation:vinyl-spin 3.8s linear infinite paused;
+    radial-gradient(circle,#0A0F26 4%,transparent 4.5%),
+    radial-gradient(circle,#eccb9c 0%,#c0924e 17%,#8a6020 19%,transparent 19.5%),
+    repeating-radial-gradient(circle,
+      transparent 20%,rgba(255,255,255,.055) 20.8%,transparent 21.5%,
+      transparent 24%,rgba(255,255,255,.04)  24.8%,transparent 25.5%,
+      transparent 28%,rgba(255,255,255,.055) 28.8%,transparent 29.5%,
+      transparent 32%,rgba(255,255,255,.04)  32.8%,transparent 33.5%,
+      transparent 36%,rgba(255,255,255,.055) 36.8%,transparent 37.5%,
+      transparent 40%,rgba(255,255,255,.04)  40.8%,transparent 41.5%,
+      transparent 44%,rgba(255,255,255,.055) 44.8%,transparent 45.5%,
+      transparent 48%,rgba(255,255,255,.04)  48.8%,transparent 49.5%,
+      transparent 52%,rgba(255,255,255,.055) 52.8%,transparent 53.5%,
+      transparent 56%,rgba(255,255,255,.04)  56.8%,transparent 57.5%,
+      transparent 60%,rgba(255,255,255,.055) 60.8%,transparent 61.5%,
+      transparent 64%,rgba(255,255,255,.04)  64.8%,transparent 65.5%,
+      transparent 68%,rgba(255,255,255,.055) 68.8%,transparent 69.5%,
+      transparent 72%,rgba(255,255,255,.04)  72.8%,transparent 73.5%,
+      transparent 76%,rgba(255,255,255,.055) 76.8%,transparent 77.5%,
+      transparent 80%,rgba(255,255,255,.04)  80.8%,transparent 81.5%,
+      transparent 84%,rgba(255,255,255,.055) 84.8%,transparent 85.5%,
+      transparent 88%,rgba(255,255,255,.04)  88.8%,transparent 89.5%,
+      transparent 92%,rgba(255,255,255,.055) 92.8%,transparent 93.5%,
+      transparent 96%,rgba(255,255,255,.04)  96.8%,transparent 97.5%
+    ),
+    radial-gradient(circle,#0A0F26 0%,#111828 60%,#0A0F26 100%);
+  box-shadow:inset 0 0 8px rgba(0,0,0,.4);
 }
-.vinyl.is-playing{animation-play-state:running;}
-@keyframes vinyl-spin{to{transform:rotate(360deg);}}
-.vinyl-label{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:27px;height:27px;border-radius:50%;
-  background:
-    radial-gradient(circle at 38% 35%, rgba(255,255,255,.22) 0%, transparent 55%),
-    conic-gradient(from 0deg,#7A5010,#C4973A 18%,#eccb9c 36%,#C4973A 54%,#7A5010 72%,#C4973A 90%,#eccb9c,#C4973A,#7A5010);
-  box-shadow:0 0 0 1.5px rgba(192,146,78,.5), inset 0 1px 3px rgba(255,255,255,.2);
-  display:flex;align-items:center;justify-content:center;
+.vinyl-sheen{
+  position:absolute;inset:0;border-radius:50%;
+  background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.09) 42%,rgba(255,255,255,.15) 48%,rgba(255,255,255,.09) 54%,transparent 66%);
+  pointer-events:none;
 }
+.vinyl-label-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Great Vibes',cursive;font-size:11px;color:#0A0F26;
+  text-align:center;line-height:1.1;opacity:.75;pointer-events:none;width:28px;
+}
+.vinyl-label-text small{font-family:'Montserrat',sans-serif;font-size:5px;letter-spacing:.15em;display:block;margin-top:1px;opacity:.6;}
 .vinyl-hole{
-  width:7px;height:7px;border-radius:50%;
-  background:#0A0806;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,.8);
-  flex-shrink:0;
+  position:absolute;top:50%;left:50%;width:6px;height:6px;
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:#0A0F26;box-shadow:0 0 0 1.5px rgba(192,146,78,.4);
 }
+.vinyl-icons{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:18px;height:18px;pointer-events:none;z-index:2;
+}
+.vinyl-icons svg{width:100%;height:100%;display:block;}
+.vinyl-icon-pause{display:none;}
+.vinyl-btn.is-playing .vinyl-icon-play{display:none;}
+.vinyl-btn.is-playing .vinyl-icon-pause{display:block;}
+.vinyl-btn::after{
+  content:'';position:absolute;inset:-5px;border-radius:50%;
+  border:1px solid var(--gold);opacity:.3;
+  animation:vinylPulse 3s ease-in-out infinite;
+}
+.vinyl-btn.is-playing::after{animation-duration:1.6s;}
+@keyframes vinylPulse{0%,100%{transform:scale(1);opacity:.3;}50%{transform:scale(1.12);opacity:.05;}}
+.vinyl-tonearm{
+  position:absolute;top:-4px;right:-2px;width:24px;height:34px;
+  transform-origin:top right;transform:rotate(-28deg);
+  transition:transform .6s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:1;
+}
+.vinyl-btn.is-playing .vinyl-tonearm{transform:rotate(-12deg);}
+.vinyl-tonearm-line{
+  position:absolute;top:2px;right:4px;width:2px;height:28px;
+  background:linear-gradient(to bottom,#8a6020,#c0924e 40%,#8a6020);
+  border-radius:1px;transform:rotate(-5deg);transform-origin:top center;
+}
+.vinyl-tonearm-head{
+  position:absolute;bottom:0;right:2px;width:5px;height:6px;
+  background:#c0924e;border-radius:0 0 2px 2px;
+}
+.vinyl-tonearm-pivot{
+  position:absolute;top:0;right:2px;width:7px;height:7px;
+  background:radial-gradient(circle,#eccb9c,#8a6020);border-radius:50%;
+  box-shadow:0 1px 3px rgba(0,0,0,.3);
+}
+/* ── HOTEL PHOTO ── */
+.hotel-photo{
+  width:calc(100% + 48px);height:160px;border-radius:16px 16px 0 0;overflow:hidden;
+  background:linear-gradient(135deg,#3a3a3a 0%,#6a6a6a 50%,#4a4040 100%);
+  display:flex;align-items:center;justify-content:center;
+  margin:-30px -24px 20px;position:relative;
+}
+.hotel-photo img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+.hotel-photo-icon{opacity:.25;}
+/* ── GIFT CARD CENTERED ── */
+.gift-card-centered{
+  background:var(--card);border-radius:18px;padding:28px 22px;
+  box-shadow:0 6px 36px rgba(45,45,45,.08);
+  text-align:center;border-top:2px solid var(--gold);
+}
+.gift-card-centered .gc-store{
+  font-family:'Great Vibes',cursive;font-size:38px;color:var(--dark);
+  margin-bottom:4px;
+}
+.gift-card-centered .gc-label{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;
+}
+.gift-card-centered .gc-num{
+  font-family:'Montserrat',sans-serif;font-size:22px;font-weight:600;
+  color:var(--dark);letter-spacing:2px;margin-bottom:16px;
+}
+.gift-card-centered .btn-copy{margin:0 auto;display:inline-flex;}
 
 /* ── ENVELOPE ── */
 #envelope-screen{
@@ -539,12 +603,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -578,12 +642,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -601,12 +665,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -655,12 +719,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -702,12 +766,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -721,26 +785,31 @@ footer .fc a{color:inherit;text-decoration:none;}
 
       <!-- Caballero -->
       <div class="dc-fig">
-        <svg class="dc-svg" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
+        <svg class="dc-svg" viewBox="0 0 80 180" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
           <!-- Head -->
-          <circle cx="50" cy="26" r="16"/>
+          <ellipse cx="40" cy="19" rx="11" ry="13"/>
           <!-- Neck -->
-          <rect x="45" y="41" width="10" height="9" rx="2"/>
-          <!-- Suit jacket -->
-          <path d="M18 52 Q26 46 42 48 L44 95 L56 95 L58 48 Q74 46 82 52 L84 108 L16 108 Z"/>
-          <!-- Lapels -->
-          <path d="M42 48 L37 76 L50 70 L63 76 L58 48 L50 53 Z" fill="var(--bg)" opacity=".22"/>
-          <!-- Tie -->
-          <polygon points="48,51 45,78 50,74 55,78 52,51" fill="#c0924e" opacity=".55"/>
-          <!-- Belt -->
-          <rect x="18" y="106" width="64" height="5" rx="2"/>
-          <!-- Belt buckle -->
-          <rect x="42" y="103" width="16" height="11" rx="2" fill="#c0924e"/>
-          <!-- Trousers -->
-          <path d="M18 110 L26 190 L47 187 L50 165 L53 187 L74 190 L82 110 Z"/>
-          <!-- Shoes -->
-          <path d="M26 188 L16 198 L48 198 L47 188 Z"/>
-          <path d="M74 188 L53 188 L52 198 L84 198 Z"/>
+          <rect x="36" y="31" width="8" height="7" rx="2"/>
+          <!-- Shirt collar -->
+          <path d="M32 37 L40 44 L48 37" stroke="#c0924e" stroke-width="1.2" fill="none" opacity=".7"/>
+          <!-- Slim tuxedo jacket -->
+          <path d="M18 40 Q27 36 36 39 L36 90 L44 90 L44 39 Q53 36 62 40 L65 102 L15 102 Z"/>
+          <!-- Left lapel -->
+          <path d="M36 39 L30 62 L40 57 Z" fill="var(--bg)" opacity=".28"/>
+          <!-- Right lapel -->
+          <path d="M44 39 L50 62 L40 57 Z" fill="var(--bg)" opacity=".28"/>
+          <!-- Bowtie -->
+          <path d="M36 40 L40 44 L44 40 M36 40 Q40 43 44 40" stroke="#c0924e" stroke-width="1.5" fill="none"/>
+          <!-- Pocket square -->
+          <path d="M57 50 L61 46 L64 50 L61 53 Z" fill="#c0924e" opacity=".6"/>
+          <!-- Trouser crease line -->
+          <line x1="32" y1="102" x2="26" y2="168" stroke="var(--bg)" stroke-width=".6" opacity=".2"/>
+          <line x1="48" y1="102" x2="54" y2="168" stroke="var(--bg)" stroke-width=".6" opacity=".2"/>
+          <!-- Slim trousers -->
+          <path d="M15 102 L23 168 L38 165 L40 148 L42 165 L57 168 L65 102 Z"/>
+          <!-- Oxford shoes -->
+          <path d="M23 166 L14 174 L38 174 L38 166 Z"/>
+          <path d="M57 166 L42 166 L42 174 L66 174 Z"/>
         </svg>
         <div class="dc-fig-name">Caballero</div>
         <div class="dc-fig-hint">Traje Formal<br>Corbata o Moño</div>
@@ -750,26 +819,32 @@ footer .fc a{color:inherit;text-decoration:none;}
 
       <!-- Dama -->
       <div class="dc-fig">
-        <svg class="dc-svg" viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
-          <!-- Hair updo -->
-          <ellipse cx="50" cy="11" rx="13" ry="9"/>
+        <svg class="dc-svg" viewBox="0 0 80 180" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
+          <!-- Hair updo bun -->
+          <ellipse cx="40" cy="8" rx="9" ry="6"/>
           <!-- Head -->
-          <circle cx="50" cy="30" r="14"/>
+          <ellipse cx="40" cy="21" rx="10" ry="12"/>
           <!-- Neck -->
-          <rect x="46" y="43" width="8" height="8" rx="2"/>
-          <!-- Arms -->
-          <path d="M32 52 Q20 63 18 80" stroke="currentColor" stroke-width="10" stroke-linecap="round" fill="none"/>
-          <path d="M68 52 Q80 63 82 80" stroke="currentColor" stroke-width="10" stroke-linecap="round" fill="none"/>
-          <!-- Bodice -->
-          <path d="M32 48 Q37 44 46 47 L47 80 L53 80 L54 47 Q63 44 68 48 L70 84 L30 84 Z"/>
-          <!-- Waist sash -->
-          <rect x="30" y="82" width="40" height="7" rx="3" fill="#c0924e" opacity=".65"/>
-          <!-- Ball gown skirt -->
-          <path d="M30 88 Q16 118 4 200 L96 200 Q84 118 70 88 Z"/>
-          <!-- Skirt fold lines -->
-          <path d="M38 89 Q26 130 16 200" stroke="rgba(192,146,78,.28)" stroke-width="1.5" fill="none"/>
-          <path d="M50 89 L50 200"          stroke="rgba(192,146,78,.22)" stroke-width="1.5" fill="none"/>
-          <path d="M62 89 Q74 130 84 200"  stroke="rgba(192,146,78,.28)" stroke-width="1.5" fill="none"/>
+          <rect x="37" y="32" width="6" height="6" rx="2"/>
+          <!-- Bare shoulders line -->
+          <path d="M22 40 Q31 36 40 38 Q49 36 58 40" stroke="#c0924e" stroke-width="1" fill="none" opacity=".5"/>
+          <!-- Elegant off-shoulder bodice -->
+          <path d="M22 40 Q28 37 35 39 L35 74 L45 74 L45 39 Q52 37 58 40 L60 78 L20 78 Z"/>
+          <!-- Sweetheart neckline -->
+          <path d="M35 39 Q40 46 45 39" stroke="var(--bg)" stroke-width="1.5" fill="none" opacity=".3"/>
+          <!-- Waist detail -->
+          <rect x="20" y="76" width="40" height="5" rx="2" fill="#c0924e" opacity=".55"/>
+          <!-- Slim A-line skirt -->
+          <path d="M20 80 Q12 118 8 174 L72 174 Q68 118 60 80 Z"/>
+          <!-- Vertical drape lines -->
+          <path d="M33 81 Q28 124 22 174" stroke="rgba(192,146,78,.2)" stroke-width="1.2" fill="none"/>
+          <path d="M40 81 L40 174"        stroke="rgba(192,146,78,.16)" stroke-width="1.2" fill="none"/>
+          <path d="M47 81 Q52 124 58 174" stroke="rgba(192,146,78,.2)" stroke-width="1.2" fill="none"/>
+          <!-- Heels -->
+          <ellipse cx="22" cy="176" rx="8" ry="3"/>
+          <line x1="22" y1="174" x2="19" y2="180" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="58" cy="176" rx="8" ry="3"/>
+          <line x1="58" y1="174" x2="55" y2="180" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
         </svg>
         <div class="dc-fig-name">Dama</div>
         <div class="dc-fig-hint">Vestido Formal<br>Estilo Elegante</div>
@@ -780,12 +855,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -861,12 +936,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -893,38 +968,24 @@ footer .fc a{color:inherit;text-decoration:none;}
     </div>
     <div class="gift-grid">
 
-      <div class="gift-card rv">
-        <div class="gift-logo-wrap liverpool">
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="#fff">
-            <text x="4" y="26" font-family="Arial" font-size="13" font-weight="bold">Liv.</text>
-          </svg>
-        </div>
-        <div class="gift-body">
-          <div class="gb-name">Liverpool</div>
-          <div class="gb-desc">Mesa de Regalos</div>
-          <div class="gb-account" id="liverpoolNum">52006360</div>
-          <button class="btn-copy" onclick="copyText('liverpoolNum','copyBtnLiv',this)">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            Copiar No.
-          </button>
-        </div>
+      <div class="gift-card-centered rv">
+        <div class="gc-store">Liverpool</div>
+        <div class="gc-label">Mesa de Regalos</div>
+        <div class="gc-num" id="liverpoolNum">52006360</div>
+        <button class="btn-copy" onclick="copyText('liverpoolNum','copyBtnLiv',this)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          Copiar No.
+        </button>
       </div>
 
-      <div class="gift-card rv">
-        <div class="gift-logo-wrap palacio">
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="#c0924e">
-            <text x="4" y="26" font-family="Arial" font-size="11" font-weight="bold">P.H.</text>
-          </svg>
-        </div>
-        <div class="gift-body">
-          <div class="gb-name">Palacio de Hierro</div>
-          <div class="gb-desc">Mesa de Regalos</div>
-          <div class="gb-account" id="palacioNum">407800</div>
-          <button class="btn-copy" onclick="copyText('palacioNum','copyBtnPal',this)">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            Copiar No.
-          </button>
-        </div>
+      <div class="gift-card-centered rv">
+        <div class="gc-store">Palacio de Hierro</div>
+        <div class="gc-label">Mesa de Regalos</div>
+        <div class="gc-num" id="palacioNum">407800</div>
+        <button class="btn-copy" onclick="copyText('palacioNum','copyBtnPal',this)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          Copiar No.
+        </button>
       </div>
 
     </div>
@@ -932,12 +993,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -947,6 +1008,9 @@ footer .fc a{color:inherit;text-decoration:none;}
     <h2 class="sec-title">Hospedaje</h2>
 
     <div class="hotel-card rv">
+      <div class="hotel-photo">
+        <svg class="hotel-photo-icon" width="48" height="48" viewBox="0 0 24 24" fill="#eccb9c"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      </div>
       <div class="hotel-name">Real Inn Perinorte</div>
       <div class="hotel-tip">
         Al reservar menciona que eres invitado/a a la boda de <em>Adriana y Heriberto</em>.
@@ -958,6 +1022,9 @@ footer .fc a{color:inherit;text-decoration:none;}
     </div>
 
     <div class="hotel-card rv">
+      <div class="hotel-photo">
+        <svg class="hotel-photo-icon" width="48" height="48" viewBox="0 0 24 24" fill="#eccb9c"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      </div>
       <div class="hotel-name">NH Valle Dorado</div>
       <div class="hotel-tip">
         Hotel NH Mexico City Valle Dorado · Opción cómoda para los invitados de la celebración.
@@ -971,12 +1038,12 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 170 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 19 Q44 7 85 19 T164 19" stroke="#c0924e" stroke-width=".85" opacity=".5"/>
-      <path d="M6 21 Q44 33 85 21 T164 21" stroke="#c0924e" stroke-width=".5" opacity=".22"/>
-      <polygon points="85,4 88.1,13.8 98.5,13.8 90.2,19.6 93.3,29.4 85,23.6 76.7,29.4 79.8,19.6 71.5,13.8 81.9,13.8" fill="#c0924e" opacity=".75"/>
-      <polygon points="32,10 33.2,14 37.5,14 34,16.8 35.2,20.8 32,18 28.8,20.8 30,16.8 26.5,14 30.8,14" fill="#c0924e" opacity=".38"/>
-      <polygon points="138,10 139.2,14 143.5,14 140,16.8 141.2,20.8 138,18 134.8,20.8 136,16.8 132.5,14 136.8,14" fill="#c0924e" opacity=".38"/>
+    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
+      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
+      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -1004,14 +1071,25 @@ footer .fc a{color:inherit;text-decoration:none;}
 </div>
 
 <!-- MÚSICA / VINIL -->
-<button class="vinyl-btn" id="musicFab" aria-label="Reproducir música">
-  <div class="vinyl" id="vinylDisc">
-    <div class="vinyl-label">
+<button class="vinyl-btn" id="music-btn" aria-label="Reproducir música">
+  <div class="vinyl-spin">
+    <div class="vinyl-disc">
+      <div class="vinyl-sheen"></div>
+      <div class="vinyl-label-text">A&amp;H<small>♪</small></div>
       <div class="vinyl-hole"></div>
     </div>
+    <div class="vinyl-icons" aria-hidden="true">
+      <svg class="vinyl-icon-play" viewBox="0 0 24 24" fill="#eccb9c"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="vinyl-icon-pause" viewBox="0 0 24 24" fill="#eccb9c"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </div>
+  </div>
+  <div class="vinyl-tonearm">
+    <div class="vinyl-tonearm-pivot"></div>
+    <div class="vinyl-tonearm-line"></div>
+    <div class="vinyl-tonearm-head"></div>
   </div>
 </button>
-<audio id="bgAudio" loop preload="auto">
+<audio id="music" loop preload="auto">
   <source src="./cancion.mp3" type="audio/mpeg">
 </audio>
 
@@ -1210,6 +1288,7 @@ function launchPage(){
   initScrollReveal();
   initItinerary();
   initDressCode();
+  tryAutoMusic();
 }
 
 /* ══════════════════════════════════════
@@ -1485,8 +1564,8 @@ var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var wheelTL = gsap.timeline({
       scrollTrigger:{
         trigger:'.wheel-stage', start:'top bottom', end:'bottom top', scrub:1.2,
-        onUpdate:function(){
-          var v = ScrollTrigger.getVelocity();
+        onUpdate:function(self){
+          var v = self.getVelocity();
           if(Math.abs(v) > 20) spawnWheelSparks(v);
         }
       }
@@ -1542,24 +1621,60 @@ var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* ══════════════════════════════════════
    MÚSICA
 ══════════════════════════════════════ */
-var fab       = document.getElementById('musicFab');
-var vinylDisc = document.getElementById('vinylDisc');
-var audio     = document.getElementById('bgAudio');
-var playing   = false;
-fab.addEventListener('click', function(){
-  playing = !playing;
-  if(playing){
-    audio.play().catch(function(){});
-    vinylDisc.classList.add('is-playing');
-    fab.classList.add('is-playing');
-    fab.setAttribute('aria-label','Pausar música');
-  } else {
-    audio.pause();
-    vinylDisc.classList.remove('is-playing');
-    fab.classList.remove('is-playing');
-    fab.setAttribute('aria-label','Reproducir música');
+const MUSIC_START_OFFSET = 17;
+const musicEl  = document.getElementById('music');
+const musicBtn = document.getElementById('music-btn');
+
+function setMusicStart(){
+  if(!musicEl) return;
+  try { musicEl.currentTime = MUSIC_START_OFFSET; } catch(e){}
+}
+if(musicEl){
+  musicEl.addEventListener('loadedmetadata', setMusicStart, {once:true});
+  musicEl.addEventListener('play',  ()=> musicBtn && musicBtn.classList.add('is-playing'));
+  musicEl.addEventListener('pause', ()=> musicBtn && musicBtn.classList.remove('is-playing'));
+  musicEl.addEventListener('ended', ()=>{ setMusicStart(); musicEl.play().catch(()=>{}); });
+}
+function showMusicBtn(){
+  if(musicBtn) musicBtn.classList.add('is-ready');
+}
+function startMusic(){
+  showMusicBtn();
+  if(!musicEl) return;
+  setMusicStart();
+  const p = musicEl.play();
+  if(p && typeof p.catch === 'function') p.catch(()=>{});
+}
+if(musicBtn){
+  musicBtn.addEventListener('click', ()=>{
+    if(!musicEl) return;
+    if(musicEl.paused){
+      if(musicEl.currentTime < MUSIC_START_OFFSET) setMusicStart();
+      musicEl.play().catch(()=>{});
+    } else {
+      musicEl.pause();
+    }
+  });
+}
+function tryAutoMusic(){
+  if(!musicEl) return;
+  setMusicStart();
+  showMusicBtn();
+  var p = musicEl.play();
+  if(p && typeof p.catch === 'function'){
+    p.catch(function(){
+      function onFirstInteraction(){
+        startMusic();
+        document.removeEventListener('click', onFirstInteraction);
+        document.removeEventListener('touchstart', onFirstInteraction);
+        document.removeEventListener('scroll', onFirstInteraction);
+      }
+      document.addEventListener('click', onFirstInteraction, {once:true});
+      document.addEventListener('touchstart', onFirstInteraction, {once:true});
+      document.addEventListener('scroll', onFirstInteraction, {once:true});
+    });
   }
-});
+}
 </script>
 </body>
 </html>
