@@ -281,45 +281,11 @@ section{padding:60px 26px;}
 .amp{font-style:italic;font-size:16px;color:var(--gold);}
 .flor{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);opacity:.5;letter-spacing:10px;}
 
-/* ── GALERÍA / WHEEL ── */
-.gallery{padding:60px 0 80px;}
-.gallery-head{text-align:center;margin-bottom:50px;padding:0 26px;}
-.gallery-sub{font-family:'Great Vibes',cursive;color:var(--gold);font-size:32px;line-height:1;margin-top:8px;}
-.wheel-stage{position:relative;width:100%;height:min(960px,108vw);max-width:1080px;margin:0 auto;padding:clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:center;}
-.wheel{position:relative;width:min(840px,92vw);height:min(840px,92vw);border-radius:50%;}
-.wheel-spoke{position:absolute;inset:-2px;border-radius:50%;border:1px solid rgba(192,146,78,0.30);}
-.wheel-spoke--inner{inset:min(120px,15%);border-style:dashed;opacity:.5;}
-.wheel-item{
-  position:absolute;
-  --r:min(345px,37vw);
-  --angle:calc(var(--i) * (360deg / 6));
-  left:50%;top:50%;
-  width:min(310px,31vw);
-  height:min(400px,40vw);
-  margin-left:calc(min(310px,31vw) / -2);
-  margin-top:calc(min(400px,40vw) / -2);
-  transform:rotate(var(--angle)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--angle)));
-  border-radius:8px;overflow:hidden;
-  box-shadow:0 8px 32px rgba(0,0,0,.2),0 1px 4px rgba(0,0,0,.1);
-}
-.wheel-item-inner{position:relative;width:100%;height:100%;cursor:zoom-in;}
-.wheel-item-inner img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .6s ease;}
-.wheel-item-inner:hover img{transform:scale(1.05);}
-.wheel-hub{position:absolute;width:clamp(50px,7vw,80px);height:clamp(50px,7vw,80px);color:var(--gold);opacity:.6;}
-
-/* ── WHEEL SPARKS ── */
-#wheel-spark-layer{position:absolute;inset:0;pointer-events:none;z-index:10;overflow:visible;}
-.wheel-spark{
-  position:absolute;pointer-events:none;transform-origin:center center;will-change:transform,opacity;
-  filter:drop-shadow(0 0 5px rgba(236,203,156,.9));
-}
-
-/* ── LIGHTBOX ── */
-#lightbox{position:fixed;inset:0;z-index:9990;display:none;align-items:center;justify-content:center;padding:clamp(16px,4vw,48px);background:rgba(8,8,8,.85);backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);opacity:0;cursor:zoom-out;}
-#lightbox.is-open{display:flex;}
-#lightbox-img{max-width:min(94vw,1400px);max-height:min(86vh,1000px);width:auto;height:auto;object-fit:contain;border-radius:14px;box-shadow:0 28px 90px rgba(0,0,0,.6);opacity:0;transform:scale(.88);}
-#lightbox-close{position:absolute;top:clamp(16px,3vw,32px);right:clamp(16px,3vw,32px);width:48px;height:48px;border:1px solid rgba(192,146,78,.45);background:rgba(10,10,10,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:50%;color:#F8F5EC;font-size:26px;line-height:1;font-family:'Montserrat',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .3s,transform .3s;}
-#lightbox-close:hover{background:rgba(80,60,20,.8);transform:scale(1.08);}
+/* ── PHOTO MOMENTS (fotos editoriales inline) ── */
+.photo-moment{width:100%;line-height:0;}
+.photo-moment img{width:100%;height:auto;display:block;}
+.photo-moment--portrait{padding:0 26px;}
+.photo-moment--portrait img{max-width:320px;display:block;margin:0 auto;border-radius:20px;box-shadow:0 16px 56px rgba(45,45,45,.18);}
 
 /* ── MESA DE REGALOS ── */
 .gift-grid{display:flex;flex-direction:column;gap:16px;}
@@ -713,6 +679,11 @@ footer .fc a{color:inherit;text-decoration:none;}
     </div>
   </section>
 
+  <!-- FOTO 1 — cinema post-mensaje -->
+  <div class="photo-moment photo-moment--cinema rv">
+    <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323941188-0.JPG" alt="Adriana y Heriberto" loading="lazy">
+  </div>
+
   <!-- ORNAMENTO -->
   <div class="orn rv">
     <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -762,6 +733,11 @@ footer .fc a{color:inherit;text-decoration:none;}
       <a class="btn" href="https://maps.app.goo.gl/1kR3w1SHXpScnhdA9" target="_blank" rel="noopener">Cómo Llegar</a>
     </div>
   </section>
+
+  <!-- FOTO 2 — portrait post-ubicación -->
+  <div class="photo-moment photo-moment--portrait rv">
+    <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323947924-0.JPG" alt="Adriana y Heriberto" loading="lazy">
+  </div>
 
   <!-- CALENDAR -->
   <section class="rv cal-c" id="scal">
@@ -821,6 +797,11 @@ footer .fc a{color:inherit;text-decoration:none;}
 
     </div>
   </section>
+
+  <!-- FOTO 3 — wide post-itinerario -->
+  <div class="photo-moment photo-moment--wide rv">
+    <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323955847-0.jpg" alt="Adriana y Heriberto" loading="lazy">
+  </div>
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
@@ -904,42 +885,9 @@ footer .fc a{color:inherit;text-decoration:none;}
     </div>
   </section>
 
-  <!-- GALERÍA — RUEDA DE LA FORTUNA -->
-  <section class="gallery">
-    <div class="gallery-head">
-      <div class="eyebrow rv">Nuestros Momentos</div>
-      <h2 class="sec-title rv">Recuerdos</h2>
-      <div class="gallery-sub rv">Adriana &amp; Heriberto</div>
-    </div>
-    <div class="wheel-stage">
-      <div id="wheel-spark-layer" aria-hidden="true"></div>
-      <div class="wheel" id="wheel">
-        <span class="wheel-spoke" aria-hidden="true"></span>
-        <span class="wheel-spoke wheel-spoke--inner" aria-hidden="true"></span>
-        <div class="wheel-item" style="--i:0"><div class="wheel-item-inner"><img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323935409-0.jpg" alt="Foto 1" loading="lazy"></div></div>
-        <div class="wheel-item" style="--i:1"><div class="wheel-item-inner"><img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323941188-0.JPG" alt="Foto 2" loading="lazy"></div></div>
-        <div class="wheel-item" style="--i:2"><div class="wheel-item-inner"><img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323947924-0.JPG" alt="Foto 3" loading="lazy"></div></div>
-        <div class="wheel-item" style="--i:3"><div class="wheel-item-inner"><img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323955847-0.jpg" alt="Foto 4" loading="lazy"></div></div>
-        <div class="wheel-item" style="--i:4"><div class="wheel-item-inner"><img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323964205-0.jpg" alt="Foto 5" loading="lazy"></div></div>
-        <div class="wheel-item" style="--i:5"><div class="wheel-item-inner"><img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323972527-0.jpg" alt="Foto 6" loading="lazy"></div></div>
-      </div>
-      <div class="wheel-hub" aria-hidden="true">
-        <svg viewBox="0 0 60 60" fill="none">
-          <g stroke="currentColor" stroke-width=".8" fill="none">
-            <circle cx="30" cy="30" r="18" opacity=".4"/>
-            <circle cx="30" cy="30" r="10"/>
-            <circle cx="30" cy="30" r="3" fill="currentColor"/>
-            <path d="M30 14 L30 20 M30 40 L30 46 M14 30 L20 30 M40 30 L46 30" opacity=".55"/>
-          </g>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <!-- LIGHTBOX -->
-  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" aria-hidden="true">
-    <img id="lightbox-img" src="" alt="">
-    <button id="lightbox-close" aria-label="Cerrar">&#x2715;</button>
+  <!-- FOTO 4 — post-familia -->
+  <div class="photo-moment rv">
+    <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323964205-0.jpg" alt="Adriana y Heriberto" loading="lazy">
   </div>
 
   <!-- ORNAMENTO -->
@@ -1002,6 +950,11 @@ footer .fc a{color:inherit;text-decoration:none;}
 
     </div>
   </section>
+
+  <!-- FOTO 5 — post-regalos -->
+  <div class="photo-moment rv">
+    <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/cf2375ce-e81a-42c7-a2d3-32bf74c5d772/1779323972527-0.jpg" alt="Adriana y Heriberto" loading="lazy">
+  </div>
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
@@ -1531,126 +1484,16 @@ function copyText(elId, btnId, btnEl){
 }
 
 /* ══════════════════════════════════════
-   WHEEL — Rueda de la Fortuna (6 fotos)
+   PHOTO MOMENTS — scroll reveal inline
 ══════════════════════════════════════ */
-var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-(function initWheel(){
-  var wheel = document.getElementById('wheel');
-  if(!wheel) return;
-  var wheelItems = wheel.querySelectorAll('.wheel-item-inner');
-
-  if(!prefersReduced){
-    gsap.fromTo('.wheel-item',
-      {opacity:0, scale:.4},
-      {opacity:1, scale:1, duration:1.2, stagger:.1, ease:'back.out(1.3)',
-       scrollTrigger:{trigger:'.wheel-stage', start:'top 78%'}});
-    gsap.fromTo('.wheel-hub',
-      {opacity:0, scale:.3, rotate:-60},
-      {opacity:1, scale:1, rotate:0, duration:1.4, ease:'back.out(1.6)',
-       scrollTrigger:{trigger:'.wheel-stage', start:'top 78%'}});
-
-    var sparkLayer  = document.getElementById('wheel-spark-layer');
-    var stageEl     = document.querySelector('.wheel-stage');
-    var lastSparkMs = 0;
-    var GOLD_COLORS = ['#c0924e','#eccb9c','#FFFFFF','#d4b87e'];
-    var STAR_PATH   = 'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)';
-
-    function spawnWheelSparks(scrollVel){
-      var now  = performance.now();
-      var absV = Math.abs(scrollVel);
-      var gap  = Math.max(16, 90 - absV * 0.06);
-      if(now - lastSparkMs < gap) return;
-      lastSparkMs = now;
-      var sw=stageEl.offsetWidth, sh=stageEl.offsetHeight;
-      var cx=sw/2, cy=sh/2;
-      var r=Math.min(390, window.innerWidth * 0.43);
-      var cnt=Math.min(8, 2 + Math.floor(absV / 200));
-      for(var k=0; k<cnt; k++){
-        (function(){
-          var angle=Math.random()*Math.PI*2;
-          var rOff=(Math.random()-.5)*60;
-          var sx=cx+Math.cos(angle)*(r+rOff);
-          var sy=cy+Math.sin(angle)*(r+rOff);
-          var isStar=Math.random()>.38;
-          var size=isStar?(16+Math.random()*14):(8+Math.random()*8);
-          var el=document.createElement('div');
-          el.className='wheel-spark';
-          el.style.cssText=[
-            'width:'+size+'px','height:'+size+'px',
-            'left:'+(sx-size/2)+'px','top:'+(sy-size/2)+'px',
-            'background:'+GOLD_COLORS[Math.floor(Math.random()*GOLD_COLORS.length)],
-            isStar?'clip-path:'+STAR_PATH+';border-radius:0':'border-radius:50%'
-          ].join(';');
-          sparkLayer.appendChild(el);
-          var outA=Math.atan2(sy-cy,sx-cx);
-          var dist=55+Math.random()*90;
-          var flyX=Math.cos(outA)*dist;
-          var flyY=Math.sin(outA)*dist-(15+Math.random()*35);
-          gsap.fromTo(el,
-            {opacity:1,scale:1,x:0,y:0,rotate:Math.random()*360},
-            {opacity:0,scale:.2,x:flyX,y:flyY,rotate:'+='+(Math.random()*500-250),
-             duration:.55+Math.random()*.5,ease:'power1.out',
-             onComplete:function(){ if(el.parentNode) el.parentNode.removeChild(el); }
-            });
-        })();
-      }
-    }
-
-    var wheelTL = gsap.timeline({
-      scrollTrigger:{
-        trigger:'.wheel-stage', start:'top bottom', end:'bottom top', scrub:1.2,
-        onUpdate:function(self){
-          var v = self.getVelocity();
-          if(Math.abs(v) > 20) spawnWheelSparks(v);
-        }
-      }
-    });
-    wheelTL.to(wheel, {rotation:360, ease:'none'}, 0);
-    wheelTL.to(wheelItems, {rotation:-360, ease:'none'}, 0);
-  }
-
-  gsap.fromTo('.gallery-head > *',
-    {opacity:0, y:18},
-    {opacity:1, y:0, duration:1, stagger:.1,
-     scrollTrigger:{trigger:'.gallery-head', start:'top 80%'}});
-})();
-
-/* ══════════════════════════════════════
-   LIGHTBOX
-══════════════════════════════════════ */
-(function initLightbox(){
-  var lb=document.getElementById('lightbox');
-  var lbImg=document.getElementById('lightbox-img');
-  var lbCls=document.getElementById('lightbox-close');
-  if(!lb||!lbImg) return;
-  var open=false;
-  function openLightbox(src,alt){
-    if(open) return; open=true;
-    lbImg.src=src; lbImg.alt=alt||'';
-    lb.classList.add('is-open'); lb.setAttribute('aria-hidden','false');
-    document.body.style.overflow='hidden';
-    gsap.to(lb,{opacity:1,duration:.38,ease:'power2.out'});
-    gsap.to(lbImg,{opacity:1,scale:1,duration:.55,ease:'power3.out',delay:.05});
-  }
-  function closeLightbox(){
-    if(!open) return; open=false;
-    gsap.to(lbImg,{opacity:0,scale:.88,duration:.32,ease:'power2.in'});
-    gsap.to(lb,{opacity:0,duration:.35,ease:'power2.in',delay:.05,
-      onComplete:function(){
-        lb.classList.remove('is-open'); lb.setAttribute('aria-hidden','true');
-        document.body.style.overflow=''; lbImg.removeAttribute('src');
-      }});
-  }
-  document.querySelectorAll('.wheel-item-inner').forEach(function(el){
-    var img=el.querySelector('img'); if(!img) return;
-    el.addEventListener('click',function(e){
-      e.preventDefault(); e.stopPropagation();
-      openLightbox(img.currentSrc||img.src,img.alt);
-    });
+(function initPhotoMoments(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.photo-moment').forEach(function(el){
+    gsap.fromTo(el,
+      {opacity:0, y:40},
+      {opacity:1, y:0, duration:1, ease:'power2.out',
+       scrollTrigger:{trigger:el, start:'top 88%'}});
   });
-  lb.addEventListener('click',function(e){ if(e.target===lb) closeLightbox(); });
-  lbCls.addEventListener('click',closeLightbox);
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&open) closeLightbox(); });
 })();
 
 /* ══════════════════════════════════════
