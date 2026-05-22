@@ -282,10 +282,30 @@ section{padding:60px 26px;}
 .flor{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);opacity:.5;letter-spacing:10px;}
 
 /* ── PHOTO MOMENTS (fotos editoriales inline) ── */
+@keyframes levitate{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+}
+@keyframes levitate-slow{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-7px);}
+}
+@media(prefers-reduced-motion:reduce){
+  .photo-moment img{animation:none!important;}
+}
 .photo-moment{width:100%;line-height:0;}
-.photo-moment img{width:100%;height:auto;display:block;}
+.photo-moment img{
+  width:100%;height:auto;display:block;
+  animation:levitate 5s ease-in-out infinite;
+}
 .photo-moment--portrait{padding:0 26px;}
-.photo-moment--portrait img{max-width:320px;display:block;margin:0 auto;border-radius:20px;box-shadow:0 16px 56px rgba(45,45,45,.18);}
+.photo-moment--portrait img{
+  max-width:320px;display:block;margin:0 auto;border-radius:20px;
+  box-shadow:0 16px 56px rgba(45,45,45,.18);
+  animation:levitate 6s ease-in-out infinite;
+}
+.photo-moment:nth-child(odd) img{animation-duration:5.5s;}
+.photo-moment:nth-child(even) img{animation-duration:6.5s;animation-delay:.8s;}
 
 /* ── MESA DE REGALOS ── */
 .gift-grid{display:flex;flex-direction:column;gap:16px;}
