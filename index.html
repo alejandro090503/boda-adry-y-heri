@@ -1047,8 +1047,9 @@ footer .fc a{color:inherit;text-decoration:none;}
     <div class="rsvp-card" id="rsvp-card">
       <div id="rsvp-fields"></div>
       <button class="btn-confirmar" id="rsvpBtn" aria-label="Confirmar asistencia">
-        Confirmar Asistencia
+        Confirmar
       </button>
+      <p id="rsvpFeedback" style="display:none;text-align:center;margin-top:14px;font-size:14px;font-style:italic;font-family:'Cormorant Garamond',serif"></p>
       <p class="rsvp-deadline">Fecha límite: 1 de agosto de 2026</p>
     </div>
   </section>
@@ -1091,23 +1092,30 @@ history.scrollRestoration='manual';
 gsap.registerPlugin(ScrollTrigger);
 
 /* ══════════════════════════════════════
-   RSVP — WhatsApp con ?pases=N
+   RSVP — Panel de Invitados (Elysium)
 ══════════════════════════════════════ */
+var RSVP_PARAMS    = new URLSearchParams(window.location.search);
+var RSVP_PARA      = RSVP_PARAMS.get('para');
+var RSVP_RAW       = parseInt(RSVP_PARAMS.get('pases'), 10);
+var RSVP_PASES     = (!isNaN(RSVP_RAW) && RSVP_RAW >= 1 && RSVP_RAW <= 20) ? RSVP_RAW : 1;
+var RSVP_URL       = 'https://boda-adry-y-heri.vercel.app';
+var RSVP_CHOICE    = 'yes';   /* 'yes' | 'no' — default Sí */
+
+/* Fecha límite: 1 ago 2026 23:59:59 — desde el 2 ago 00:00 el form se congela */
+var RSVP_DEADLINE = new Date(2026, 7, 1, 23, 59, 59, 999);
+var RSVP_FROZEN   = Date.now() > RSVP_DEADLINE.getTime();
+
 (function initRsvp(){
-  var params = new URLSearchParams(window.location.search);
-  var raw    = parseInt(params.get('pases'), 10);
-  var pases  = (!isNaN(raw) && raw >= 1 && raw <= 5) ? raw : 1;
   var container = document.getElementById('rsvp-fields');
   var btn       = document.getElementById('rsvpBtn');
-  var asiste    = true;
 
   /* 1 — Badge pases asignados */
   var badge = document.createElement('div');
   badge.className = 'rsvp-pases-badge';
   badge.innerHTML =
     '<span class="rpb-lbl">Pases Asignados</span>' +
-    '<span class="rpb-num">' + pases + '</span>' +
-    '<span class="rpb-sub">' + (pases === 1 ? 'persona' : 'personas') + '</span>';
+    '<span class="rpb-num">' + RSVP_PASES + '</span>' +
+    '<span class="rpb-sub">' + (RSVP_PASES === 1 ? 'persona' : 'personas') + '</span>';
   container.appendChild(badge);
 
   /* 2 — Toggle Asistiré / No Asistiré */
@@ -1116,10 +1124,12 @@ gsap.registerPlugin(ScrollTrigger);
   var btnSi = document.createElement('button');
   btnSi.className = 'rsvp-toggle-btn selected';
   btnSi.type = 'button';
+  btnSi.id   = 'rsvpBtnSi';
   btnSi.textContent = 'Asistiré';
   var btnNo = document.createElement('button');
   btnNo.className = 'rsvp-toggle-btn';
   btnNo.type = 'button';
+  btnNo.id   = 'rsvpBtnNo';
   btnNo.textContent = 'No Asistiré';
   toggleWrap.appendChild(btnSi);
   toggleWrap.appendChild(btnNo);
@@ -1132,8 +1142,8 @@ gsap.registerPlugin(ScrollTrigger);
 
   function renderNombres(){
     nombresWrap.innerHTML = '';
-    if(!asiste) return;
-    for(var j = 0; j < pases; j++){
+    if(RSVP_CHOICE !== 'yes') return;
+    for(var j = 0; j < RSVP_PASES; j++){
       var lbl = document.createElement('label');
       lbl.className = 'rsvp-label';
       lbl.setAttribute('for', 'rsvp-n-' + j);
@@ -1150,68 +1160,149 @@ gsap.registerPlugin(ScrollTrigger);
   }
   renderNombres();
 
-  btnSi.addEventListener('click', function(){
-    asiste = true;
-    btnSi.classList.add('selected');
-    btnNo.classList.remove('selected');
-    btn.textContent = 'Confirmar Asistencia';
+  function selectAttend(choice){
+    RSVP_CHOICE = choice;
+    btnSi.classList.toggle('selected', choice === 'yes');
+    btnNo.classList.toggle('selected', choice === 'no');
     renderNombres();
-  });
-  btnNo.addEventListener('click', function(){
-    asiste = false;
-    btnNo.classList.add('selected');
-    btnSi.classList.remove('selected');
-    btn.textContent = 'Confirmar Inasistencia';
-    renderNombres();
-  });
+    setFeedback('', '');
+  }
+  window.__rsvpSelectAttend = selectAttend; /* expuesto para pre-fill */
+
+  btnSi.addEventListener('click', function(){ selectAttend('yes'); });
+  btnNo.addEventListener('click', function(){ selectAttend('no'); });
 
   function getNombres(){
     var inputs = nombresWrap.querySelectorAll('.rsvp-nombre-input');
     var arr = [];
     for(var k = 0; k < inputs.length; k++){
-      arr.push((inputs[k].value || '').trim() || '—');
+      var v = (inputs[k].value || '').trim();
+      if(v) arr.push(v);
     }
     return arr;
   }
 
-  /* Error */
-  var errEl = document.createElement('p');
-  errEl.style.cssText = 'color:#b91c1c;font-size:13px;font-weight:500;text-align:center;margin-top:8px;display:none;font-family:Montserrat,sans-serif;';
-  container.appendChild(errEl);
+  function setFeedback(msg, color){
+    var fb = document.getElementById('rsvpFeedback');
+    if(!fb) return;
+    if(!msg){ fb.style.display='none'; return; }
+    fb.style.display = 'block';
+    fb.style.color   = color || '#b91c1c';
+    fb.textContent   = msg;
+  }
+  window.__rsvpSetFeedback = setFeedback;
+
+  function postRsvp(estado, nombresArr){
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+    setFeedback('', '');
+
+    fetch('https://panel-invitados.vercel.app/api/confirmar', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre:              RSVP_PARA || 'Invitado',
+        estado:              estado,
+        pases_confirmados:   estado === 'confirmado' ? nombresArr.length : 0,
+        nombres_confirmados: estado === 'confirmado' ? nombresArr : [],
+        url_boda:            RSVP_URL
+      })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      btn.disabled = false;
+      if(d && d.ok){
+        btn.textContent = estado === 'confirmado' ? '¡Confirmado! ✦' : 'Respuesta enviada ✦';
+        setFeedback(
+          estado === 'confirmado'
+            ? '¡Gracias por confirmar! Si cambias de opinión puedes actualizar tu respuesta cuando quieras.'
+            : 'Gracias por avisarnos. Si cambias de opinión puedes actualizar tu respuesta cuando quieras.',
+          '#7a6a4e'
+        );
+        setTimeout(function(){ btn.textContent = 'Actualizar respuesta'; }, 2400);
+      } else {
+        btn.textContent = 'Confirmar';
+        setFeedback('Hubo un problema al enviar. Intenta de nuevo.', '#b91c1c');
+      }
+    })
+    .catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'Confirmar';
+      setFeedback('Sin conexión. Verifica tu internet e intenta de nuevo.', '#b91c1c');
+    });
+  }
 
   btn.addEventListener('click', function(){
-    var nombresArr = getNombres();
-    if(asiste && (!nombresArr[0] || nombresArr[0] === '—')){
-      errEl.textContent = 'Por favor escribe tu nombre completo.';
-      errEl.style.display = 'block';
+    if(RSVP_FROZEN){
+      setFeedback('El plazo para confirmar ya cerró.', '#b91c1c');
       return;
     }
-    errEl.style.display = 'none';
-
-    var lineas;
-    if(asiste){
-      lineas = [
-        '¡Hola! Con mucho gusto confirmo mi asistencia a la celebración de Adriana Orozco y Heriberto Sandoval.',
-        'Asistiré con ' + pases + ' pase' + (pases === 1 ? '' : 's') + '.',
-      ];
-      if(pases === 1){
-        lineas.push('Mi nombre: ' + nombresArr[0]);
-      } else {
-        lineas.push('Acompañantes:');
-        for(var m = 0; m < pases; m++){
-          lineas.push((m + 1) + '. ' + (nombresArr[m] || '—'));
-        }
-      }
-      lineas.push('¡Nos vemos pronto!');
-    } else {
-      lineas = [
-        'Hola, lamentablemente no podré asistir a la celebración de Adriana Orozco y Heriberto Sandoval.',
-        'Les mando muchas felicitaciones y todo mi cariño.',
-      ];
+    if(RSVP_CHOICE === 'no'){
+      postRsvp('declino', []);
+      return;
     }
-
-    window.open('https://wa.me/525522202229?text=' + encodeURIComponent(lineas.join('\n')), '_blank');
+    /* RSVP_CHOICE === 'yes' */
+    var nombresArr = getNombres();
+    if(nombresArr.length === 0){
+      setFeedback('Por favor escribe al menos un nombre.', '#b91c1c');
+      var firstInput = nombresWrap.querySelector('.rsvp-nombre-input');
+      if(firstInput) firstInput.focus();
+      return;
+    }
+    postRsvp('confirmado', nombresArr);
   });
+
+  /* Pre-llenar con la confirmación previa si existe */
+  if(RSVP_PARA){
+    var apiUrl = 'https://panel-invitados.vercel.app/api/confirmar'
+               + '?nombre='   + encodeURIComponent(RSVP_PARA)
+               + '&url_boda=' + encodeURIComponent(RSVP_URL);
+    fetch(apiUrl)
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(d && d.ok && d.invitado){
+          var inv = d.invitado;
+          if(inv.estado === 'confirmado'){
+            selectAttend('yes');
+            var inputs = nombresWrap.querySelectorAll('.rsvp-nombre-input');
+            var nombres = (inv.nombres_confirmados && inv.nombres_confirmados.length) ? inv.nombres_confirmados : [];
+            nombres.forEach(function(n, idx){
+              if(inputs[idx]) inputs[idx].value = n;
+            });
+          } else if(inv.estado === 'declino'){
+            selectAttend('no');
+          }
+        }
+        applyDeadlineFreeze();
+      })
+      .catch(function(){ applyDeadlineFreeze(); });
+  } else {
+    applyDeadlineFreeze();
+  }
+
+  function applyDeadlineFreeze(){
+    if(!RSVP_FROZEN) return;
+    btnSi.disabled = true; btnSi.style.cursor='not-allowed'; btnSi.style.opacity='.55';
+    btnNo.disabled = true; btnNo.style.cursor='not-allowed'; btnNo.style.opacity='.55';
+    nombresWrap.querySelectorAll('.rsvp-nombre-input').forEach(function(i){
+      i.disabled = true;
+      i.style.background = '#f1ede7';
+      i.style.cursor = 'not-allowed';
+    });
+    btn.disabled = true;
+    btn.textContent = 'Plazo cerrado';
+    btn.style.cursor = 'not-allowed';
+    btn.style.opacity = '.55';
+
+    var card = document.getElementById('rsvp-card');
+    if(card && !document.getElementById('rsvpDeadlineBanner')){
+      var banner = document.createElement('div');
+      banner.id = 'rsvpDeadlineBanner';
+      banner.style.cssText = 'margin-bottom:18px;padding:14px 16px;border-radius:10px;background:rgba(192,146,78,.10);border:1px solid rgba(192,146,78,.30);color:#7a6a4e;font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:15px;line-height:1.5;text-align:center';
+      banner.innerHTML = '✦ El plazo para confirmar cerró el <strong style="font-style:normal">1 de agosto de 2026</strong>.<br>Si necesitas ajustar tu respuesta, por favor contacta directamente a los novios.';
+      card.insertBefore(banner, card.firstChild);
+    }
+  }
 })();
 
 /* ══════════════════════════════════════
