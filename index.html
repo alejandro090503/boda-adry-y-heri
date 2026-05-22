@@ -91,26 +91,23 @@ body{
 }
 
 /* ── ORNAMENTO ── */
-.orn{display:flex;justify-content:center;padding:8px 0;}
-.orn svg{width:220px;height:28px;overflow:visible;}
-.orn-diamond{
+.orn{display:flex;justify-content:center;padding:10px 0;}
+.orn svg{width:220px;height:24px;overflow:visible;}
+.orn-star{
   transform-box:fill-box;transform-origin:center;
-  animation:orn-pulse 3s ease-in-out infinite;
+  animation:orn-spin 24s linear infinite;
+  filter:drop-shadow(0 0 3px rgba(192,146,78,.45));
 }
-.orn-dot{animation:orn-blink 2.6s ease-in-out infinite;}
-.orn-dot:nth-of-type(2){animation-delay:.4s;}
-.orn-line{stroke-dasharray:70;animation:orn-shimmer 4s linear infinite;}
-.orn-line:nth-of-type(2){animation-direction:reverse;animation-delay:-.5s;}
-@keyframes orn-pulse{
-  0%,100%{transform:scale(1);filter:drop-shadow(0 0 2px rgba(192,146,78,.3));}
-  50%    {transform:scale(1.18);filter:drop-shadow(0 0 10px rgba(236,203,156,.95)) drop-shadow(0 0 4px rgba(192,146,78,.7));}
-}
-@keyframes orn-blink{
-  0%,100%{opacity:.28;}50%{opacity:.75;}
-}
-@keyframes orn-shimmer{to{stroke-dashoffset:-140;}}
+.orn-dot{animation:orn-wave 3.4s ease-in-out infinite;}
+.orn-dot:nth-of-type(2),.orn-dot:nth-of-type(5){animation-delay:.38s;}
+.orn-dot:nth-of-type(3),.orn-dot:nth-of-type(4){animation-delay:.76s;}
+.orn-line{animation:orn-breathe 3.4s ease-in-out infinite;}
+.orn-line:nth-of-type(2){animation-delay:.17s;}
+@keyframes orn-spin{to{transform:rotate(360deg);}}
+@keyframes orn-wave{0%,100%{opacity:.28;}50%{opacity:.82;}}
+@keyframes orn-breathe{0%,100%{opacity:.3;}50%{opacity:.65;}}
 @media(prefers-reduced-motion:reduce){
-  .orn-diamond,.orn-dot,.orn-line{animation:none;}
+  .orn-star,.orn-dot,.orn-line{animation:none;}
 }
 
 /* ── FECHA ── */
@@ -391,16 +388,57 @@ section{padding:60px 26px;}
 }
 .rsvp-card input:focus,
 .rsvp-nombre-input:focus{border-color:var(--gold);outline:none;}
-.btn-wa{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;margin-top:20px;padding:16px;min-height:52px;
-  background:#25D366;color:#fff;border-radius:30px;
-  border:none;cursor:pointer;
-  font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;
-  text-transform:uppercase;letter-spacing:2px;
-  transition:background .3s,transform .3s;
+/* pases badge */
+.rsvp-pases-badge{
+  text-align:center;padding:16px 12px 12px;
+  background:rgba(192,146,78,.06);border-radius:12px;
+  border:1px solid rgba(192,146,78,.18);margin-bottom:4px;
 }
-.btn-wa:hover{background:#1ebe5d;transform:translateY(-2px);}
+.rsvp-pases-badge .rpb-lbl{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:11px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);opacity:.8;display:block;
+}
+.rsvp-pases-badge .rpb-num{
+  font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:600;
+  color:var(--dark);line-height:1.1;display:block;
+}
+.rsvp-pases-badge .rpb-sub{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:500;
+  letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);
+  display:block;margin-top:2px;
+}
+/* toggle asistencia */
+.rsvp-toggle{display:flex;gap:10px;margin:18px 0 4px;}
+.rsvp-toggle-btn{
+  flex:1;padding:13px 8px;border-radius:10px;
+  border:1.5px solid rgba(192,146,78,.28);
+  background:transparent;cursor:pointer;touch-action:manipulation;
+  font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;
+  font-style:italic;letter-spacing:1.5px;color:var(--text);
+  transition:all .22s ease;min-height:48px;
+}
+.rsvp-toggle-btn.selected{
+  background:linear-gradient(135deg,#c0924e,#d4a86a);
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 18px rgba(192,146,78,.35);
+}
+/* botón confirmar */
+.btn-confirmar{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;margin-top:22px;padding:17px;min-height:54px;
+  background:linear-gradient(135deg,#b8843e 0%,#e8c47a 50%,#b8843e 100%);
+  background-size:200% 100%;color:#2d2d2d;
+  border-radius:30px;border:none;cursor:pointer;touch-action:manipulation;
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;
+  font-style:italic;letter-spacing:3px;text-transform:uppercase;
+  transition:background-position .5s ease,transform .25s ease,box-shadow .25s ease;
+  box-shadow:0 4px 22px rgba(192,146,78,.3);
+}
+.btn-confirmar:hover{
+  background-position:100% 0;transform:translateY(-2px);
+  box-shadow:0 8px 30px rgba(192,146,78,.45);
+}
 .rsvp-deadline{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;font-weight:500;color:var(--gold);margin-top:14px;opacity:.85;}
 .rsvp-select{
   width:100%;padding:14px 16px;min-height:48px;margin-bottom:8px;
@@ -603,12 +641,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -642,12 +684,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -665,12 +711,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -719,12 +769,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -766,12 +820,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -862,12 +920,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -943,12 +1005,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -1000,12 +1066,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -1045,12 +1115,16 @@ footer .fc a{color:inherit;text-decoration:none;}
 
   <!-- ORNAMENTO -->
   <div class="orn rv">
-    <svg viewBox="0 0 220 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line class="orn-line" x1="0" y1="14" x2="90" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <line class="orn-line" x1="130" y1="14" x2="220" y2="14" stroke="#c0924e" stroke-width=".7" opacity=".45"/>
-      <circle class="orn-dot" cx="96" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <circle class="orn-dot" cx="124" cy="14" r="2.2" fill="#c0924e" opacity=".55"/>
-      <rect class="orn-diamond" x="103" y="7" width="14" height="14" rx="1.5" transform="rotate(45 110 14)" fill="#c0924e"/>
+    <svg viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line class="orn-line" x1="0" y1="12" x2="86" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <line class="orn-line" x1="134" y1="12" x2="220" y2="12" stroke="#c0924e" stroke-width=".55"/>
+      <circle class="orn-dot" cx="91" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="97" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="103" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="117" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <circle class="orn-dot" cx="123" cy="12" r="1.7" fill="#c0924e" opacity=".58"/>
+      <circle class="orn-dot" cx="129" cy="12" r="1.2" fill="#c0924e" opacity=".4"/>
+      <path class="orn-star" d="M110,5 C114,9 114,15 110,19 C106,15 106,9 110,5Z M103,12 C107,8 113,8 117,12 C113,16 107,16 103,12Z" fill="#c0924e"/>
     </svg>
   </div>
 
@@ -1060,9 +1134,8 @@ footer .fc a{color:inherit;text-decoration:none;}
     <h2 class="sec-title">R.S.V.P.</h2>
     <div class="rsvp-card" id="rsvp-card">
       <div id="rsvp-fields"></div>
-      <button class="btn-wa" id="rsvpBtn" aria-label="Confirmar asistencia vía WhatsApp">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Confirmar por WhatsApp
+      <button class="btn-confirmar" id="rsvpBtn" aria-label="Confirmar asistencia">
+        Confirmar Asistencia
       </button>
       <p class="rsvp-deadline">Fecha límite: 1 de agosto de 2026</p>
     </div>
@@ -1114,97 +1187,118 @@ gsap.registerPlugin(ScrollTrigger);
   var pases  = (!isNaN(raw) && raw >= 1 && raw <= 5) ? raw : 1;
   var container = document.getElementById('rsvp-fields');
   var btn       = document.getElementById('rsvpBtn');
+  var asiste    = true;
 
-  // Selector cuántas personas asistirán
-  var lbl = document.createElement('label');
-  lbl.className = 'rsvp-label';
-  lbl.setAttribute('for','rPasesConf');
-  lbl.textContent = '¿Cuántas personas asistirán?';
-  var sel = document.createElement('select');
-  sel.id = 'rPasesConf';
-  sel.className = 'rsvp-select';
-  for(var i = 1; i <= pases; i++){
-    var opt = document.createElement('option');
-    opt.value = String(i);
-    opt.textContent = i === 1 ? '1 persona' : i + ' personas';
-    sel.appendChild(opt);
-  }
-  sel.value = String(pases);
-  container.appendChild(lbl);
-  container.appendChild(sel);
+  /* 1 — Badge pases asignados */
+  var badge = document.createElement('div');
+  badge.className = 'rsvp-pases-badge';
+  badge.innerHTML =
+    '<span class="rpb-lbl">Pases Asignados</span>' +
+    '<span class="rpb-num">' + pases + '</span>' +
+    '<span class="rpb-sub">' + (pases === 1 ? 'persona' : 'personas') + '</span>';
+  container.appendChild(badge);
 
-  // Inputs de nombres
+  /* 2 — Toggle Asistiré / No Asistiré */
+  var toggleWrap = document.createElement('div');
+  toggleWrap.className = 'rsvp-toggle';
+  var btnSi = document.createElement('button');
+  btnSi.className = 'rsvp-toggle-btn selected';
+  btnSi.type = 'button';
+  btnSi.textContent = 'Asistiré';
+  var btnNo = document.createElement('button');
+  btnNo.className = 'rsvp-toggle-btn';
+  btnNo.type = 'button';
+  btnNo.textContent = 'No Asistiré';
+  toggleWrap.appendChild(btnSi);
+  toggleWrap.appendChild(btnNo);
+  container.appendChild(toggleWrap);
+
+  /* 3 — Campos de nombre */
   var nombresWrap = document.createElement('div');
   nombresWrap.id = 'rsvp-nombres-wrap';
   container.appendChild(nombresWrap);
 
-  function renderNombres(n){
+  function renderNombres(){
     nombresWrap.innerHTML = '';
-    if(n < 1) return;
-    var titulo = document.createElement('label');
-    titulo.className = 'rsvp-label';
-    titulo.textContent = n === 1 ? 'Tu nombre' : 'Nombres de quienes asistirán';
-    nombresWrap.appendChild(titulo);
-    for(var j = 0; j < n; j++){
+    if(!asiste) return;
+    for(var j = 0; j < pases; j++){
+      var lbl = document.createElement('label');
+      lbl.className = 'rsvp-label';
+      lbl.setAttribute('for', 'rsvp-n-' + j);
+      lbl.textContent = j === 0 ? 'Nombre Completo' : 'Acompañante ' + j;
       var inp = document.createElement('input');
       inp.type = 'text';
+      inp.id = 'rsvp-n-' + j;
       inp.className = 'rsvp-nombre-input';
-      inp.placeholder = j === 0 ? 'Tu nombre completo' : 'Acompañante ' + j;
-      inp.setAttribute('data-idx', String(j));
-      inp.autocomplete = 'off';
+      inp.placeholder = j === 0 ? 'Tu nombre completo' : 'Nombre completo';
+      inp.autocomplete = 'name';
+      nombresWrap.appendChild(lbl);
       nombresWrap.appendChild(inp);
     }
   }
-  renderNombres(parseInt(sel.value, 10));
-  sel.addEventListener('change', function(){
-    renderNombres(parseInt(sel.value, 10));
+  renderNombres();
+
+  btnSi.addEventListener('click', function(){
+    asiste = true;
+    btnSi.classList.add('selected');
+    btnNo.classList.remove('selected');
+    btn.textContent = 'Confirmar Asistencia';
+    renderNombres();
+  });
+  btnNo.addEventListener('click', function(){
+    asiste = false;
+    btnNo.classList.add('selected');
+    btnSi.classList.remove('selected');
+    btn.textContent = 'Confirmar Inasistencia';
+    renderNombres();
   });
 
   function getNombres(){
     var inputs = nombresWrap.querySelectorAll('.rsvp-nombre-input');
     var arr = [];
     for(var k = 0; k < inputs.length; k++){
-      var v = (inputs[k].value || '').trim();
-      arr.push(v || '—');
+      arr.push((inputs[k].value || '').trim() || '—');
     }
     return arr;
   }
 
-  // Error message
+  /* Error */
   var errEl = document.createElement('p');
-  errEl.style.cssText = 'color:#b91c1c;font-size:14px;font-weight:500;text-align:center;margin-top:10px;display:none;font-family:Montserrat,sans-serif;';
+  errEl.style.cssText = 'color:#b91c1c;font-size:13px;font-weight:500;text-align:center;margin-top:8px;display:none;font-family:Montserrat,sans-serif;';
   container.appendChild(errEl);
 
   btn.addEventListener('click', function(){
-    var pasesConf = parseInt(sel.value, 10);
     var nombresArr = getNombres();
-    // Validate at least first name
-    if(!nombresArr[0] || nombresArr[0] === '—'){
+    if(asiste && (!nombresArr[0] || nombresArr[0] === '—')){
       errEl.textContent = 'Por favor escribe tu nombre completo.';
       errEl.style.display = 'block';
       return;
     }
     errEl.style.display = 'none';
 
-    // Build WhatsApp message
-    var lineas = [
-      '¡Hola! Con mucho gusto confirmo mi asistencia a la celebración de Adriana Orozco y Heriberto Sandoval. 🎉',
-      '✅ Asistiré con ' + pasesConf + ' pase' + (pasesConf === 1 ? '' : 's') + '.',
-    ];
-
-    if(pasesConf === 1){
-      lineas.push('Mi nombre: ' + nombresArr[0]);
-    } else {
-      lineas.push('Mis acompañantes:');
-      for(var m = 0; m < pasesConf; m++){
-        lineas.push((m + 1) + '. ' + (nombresArr[m] || '—'));
+    var lineas;
+    if(asiste){
+      lineas = [
+        '¡Hola! Con mucho gusto confirmo mi asistencia a la celebración de Adriana Orozco y Heriberto Sandoval.',
+        'Asistiré con ' + pases + ' pase' + (pases === 1 ? '' : 's') + '.',
+      ];
+      if(pases === 1){
+        lineas.push('Mi nombre: ' + nombresArr[0]);
+      } else {
+        lineas.push('Acompañantes:');
+        for(var m = 0; m < pases; m++){
+          lineas.push((m + 1) + '. ' + (nombresArr[m] || '—'));
+        }
       }
+      lineas.push('¡Nos vemos pronto!');
+    } else {
+      lineas = [
+        'Hola, lamentablemente no podré asistir a la celebración de Adriana Orozco y Heriberto Sandoval.',
+        'Les mando muchas felicitaciones y todo mi cariño.',
+      ];
     }
-    lineas.push('¡Nos vemos pronto! 💫');
 
-    var mensaje = lineas.join('\n');
-    var waUrl = 'https://wa.me/525522202229?text=' + encodeURIComponent(mensaje);
-    window.open(waUrl, '_blank');
+    window.open('https://wa.me/525522202229?text=' + encodeURIComponent(lineas.join('\n')), '_blank');
   });
 })();
 
